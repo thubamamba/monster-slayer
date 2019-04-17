@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Monster Slayer</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="resources/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="resources/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="resources/favicon-16x16.png">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Monster Slayer | A web based game built on Vue JS, a progressive framework for building user interfaces. Built by Thuba Mamba, a Johannesburg based Web &amp; Mobile App Developer and UX/UI Designer. ">
+    <meta name="keywords" content="front-end developer, web developers, vue developers, Thuba Mamba">
+    <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="css/foundation.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <script href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Rakkas');
+        @import url('https://fonts.googleapis.com/css?family=Yatra+One');
+    </style>
+</head>
+<body>
+    <div id="app">
+        <section class="row">
+                <div class="small-12 columns text-center">
+                    <h1 id="app-title"
+                    style="font-family: 'Yatra One', cursive;
+                    font-size: 45px; 
+                    color: #ffffff;
+                    border:3px; border-style:solid; 
+                    border-color:#9c92ac; 
+                    padding: 1em;
+                    text-shadow: 5px 5px #442374;;" >MONSTER SLAYER</h1>
+                </div>
+        </section>
+        <section class="row">
+            <div class="small-6 columns">
+                <h1 class="text-center" style="font-family: 'Yatra One', cursive;">YOU</h1>
+                <div class="healthbar">
+                    <div
+                        class="healthbar text-center" 
+                        style="background-color: #9c92ac;; margin: 0; color: white;"
+                        :style="{width: playerHealth + '%'}"
+                        >
+                        {{ playerHealth }}
+                    </div>
+                </div>
+            </div>
+            <div class="small-6 columns">
+                <h1 class="text-center" style="font-family: 'Yatra One', cursive;">MONSTER</h1>
+                <div class="healthbar">
+                    <div class="healthbar text-center" style="background-color: #9c92ac;; margin: 0; color: white;"
+                    :style="{width: playerHealth + '%'}">
+                        {{ monsterHealth }}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="row controls" v-if="!gameIsRunning">
+            <div class="small-12 columns">
+                <button id="start-game" @click="startGame">START NEW GAME</button>
+            </div>
+        </section>
+        <section class="row controls" v-else>
+            <div class="small-12 columns">
+                <button id="attack" @click="attack">ATTACK</button>
+                <button id="special-attack" @click="specialAttack">SPECIAL ATTACK</button>
+                <button id="heal" @click="heal">HEAL</button>
+                <button id="give-up" @click="giveUp">GIVE UP</button>
+            </div>
+        </section>
+        <section class="row log" v-if="turns.length > 0">
+            <div class="small-12 columns">
+                <ul>
+                    <li 
+                        v-for="turn in turns"
+                        :class="{'player-turn': turn.isPlayer, 'monster-turn': !turn.isPlayer}">
+                        {{ turn.text }}
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <br> 
+        <section class="row">
+            <div class="small-12 columns">
+                <div style="font-family: 'Rakkas', cursive;">Be cool and share with friends on your Socials!</div>
+                <ul class="share-buttons">
+                    <li>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fthubamamba.github.io/monster-slayer/&quote=Monster%20Slayer%20%7C%20A%20fun%20to%20play%20game" title="Share on Facebook" target="_blank">
+                            <img alt="Share on Facebook" src="resources/facebook.png" />
+                        </a>
+                        </li>
+                    <li>
+                        <a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fmonster-slayer.thubamamba.com&text=Monster%20Slayer%20%7C%20A%20fun%20to%20play%20game:%20http%3A%2F%2Fthubamamba.github.io/monster-slayer/&via=ThubaMamba" target="_blank" title="Tweet">
+                            <img alt="Tweet" src="resources/twitter.png" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://pinterest.com/pin/create/button/?url=http%3A%2F%2Fmonster-slayer.thubamamba.com&media=http://clued.co.za/console.jpg&description=A%20web%20based%20game%20built%20on%20Vue%20JS%2C%20a%20progressive%20framework%20for%20building%20user%20interfaces.%20Built%20by%20Thuba%20Mamba%2C%20a%20Johannesburg%20based%20Web%20%26amp%3B%20Mobile%20App%20Developer%20and%20UX%2FUI%20Designer." target="_blank" title="Pin it">
+                            <img alt="Pin it" src="resources/pinterest.png" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fthubamamba.github.io/monster-slayer/&title=Monster%20Slayer%20%7C%20A%20fun%20to%20play%20game&summary=A%20web%20based%20game%20built%20on%20Vue%20JS%2C%20a%20progressive%20framework%20for%20building%20user%20interfaces.%20Built%20by%20Thuba%20Mamba%2C%20a%20Johannesburg%20based%20Web%20%26amp%3B%20Mobile%20App%20Developer%20and%20UX%2FUI%20Designer.&source=http%3A%2F%2Fmonster-slayer.thubamamba.com" target="_blank" title="Share on LinkedIn">
+                            <img alt="Share on LinkedIn" src="resources/linkedin.png" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:?subject=Monster%20Slayer%20%7C%20A%20fun%20to%20play%20game&body=A%20web%20based%20game%20built%20on%20Vue%20JS%2C%20a%20progressive%20framework%20for%20building%20user%20interfaces.%20Built%20by%20Thuba%20Mamba%2C%20a%20Johannesburg%20based%20Web%20%26amp%3B%20Mobile%20App%20Developer%20and%20UX%2FUI%20Designer.:%20http%3A%2F%2Fthubamamba.github.io/monster-slayer/" target="_blank" title="Send email">
+                            <img alt="Send email" src="resources/gmail.png" />
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="small-12 columns" align="right">
+                <div style="font-family: 'Rakkas', cursive;">Made with <span style="color: #e25555;">&#9829;</span> by <a href="thubamamba.com" target="_blank">Thuba Mamba</a>.</div>
+            </div>
+        </section>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>
